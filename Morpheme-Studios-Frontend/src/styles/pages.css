@@ -1,0 +1,1196 @@
+/* ============================================================
+   PAGES
+   ============================================================ */
+
+/* ---------- Generic page header ---------- */
+.page-head {
+  padding-top: clamp(140px, 18vh, 220px);
+  /* Reduced from 180-320px */
+  padding-bottom: clamp(30px, 5vw, 50px);
+  background: var(--bone);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add a subtle background detail to the hero to fill "blank space" */
+.page-head::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--bone-2));
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.page-title {
+  margin: 16px 0 32px;
+  font-size: clamp(3rem, 10vw, 9rem);
+  /* Slightly smaller than home hero */
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 600px) {
+  .page-head {
+    padding-top: 120px;
+  }
+
+  .page-title {
+    font-size: 3.5rem;
+    margin-bottom: 24px;
+  }
+}
+
+.page-head-sub {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.page-studio .page-head {
+  padding-top: clamp(100px, 14vw, 180px);
+  padding-bottom: clamp(32px, 5vw, 60px);
+}
+
+.page-studio .page-head .page-title {
+  max-width: 60ch;
+}
+
+.page-studio .page-head-sub {
+  max-width: 52ch;
+}
+
+@media (max-width: 900px) {
+  .page-studio .page-head {
+    padding-top: 84px;
+    padding-bottom: 32px;
+  }
+
+  .page-studio .page-head .page-title {
+    font-size: clamp(2.4rem, 9vw, 4rem);
+    line-height: 1.05;
+  }
+
+  .page-studio .page-head-sub {
+    font-size: 1rem;
+    max-width: 42ch;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-studio .page-head {
+    padding-top: 72px;
+    padding-bottom: 28px;
+  }
+
+  .page-studio .page-head .page-title {
+    font-size: clamp(2.2rem, 11vw, 3.5rem);
+    line-height: 1.15;
+  }
+
+  .page-studio .page-head-sub {
+    font-size: 0.98rem;
+  }
+}
+
+/* Lead image wrapper — constrain to prevent overflow */
+.lead-image-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.careers-image-wrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.section-head {
+  margin-bottom: clamp(56px, 8vw, 100px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-head .h-lg {
+  max-width: 22ch;
+}
+
+.section-head-link {
+  margin-top: 14px;
+  width: fit-content;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* =================== HOME — HERO =================== */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  color: var(--bone);
+  overflow: hidden;
+  background: var(--paper-dark);
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: var(--paper-dark);
+}
+
+.hero-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Ensure the image always fills and provides a stable box (avoids visible alt collapse) */
+.hero-bg img {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle at 50% 50%, rgba(14, 13, 8, 0) 0%, rgba(14, 13, 8, 0.3) 50%, rgba(14, 13, 8, 0.95) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding-bottom: clamp(64px, 12vh, 180px);
+  width: 100%;
+  will-change: transform;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 9vw, 9.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+}
+
+/* Each hero visual line should be a block so words do not run together.
+   The inner span remains inline-block for GSAP transforms. */
+.hero-title .hero-line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-title .hero-line>span {
+  display: inline-block;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  margin-top: clamp(40px, 7vw, 80px);
+  flex-wrap: wrap;
+}
+
+/* Make CTA group layout more robust to small shifts (parallax/transform) so
+   buttons are not clipped at the viewport edge. Keep buttons grouped and
+   allow them to wrap cleanly on smaller screens. */
+.hero-meta .hero-btns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.hero-meta .hero-btn {
+  white-space: nowrap;
+  color: var(--bone);
+  border-color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.hero-meta .hero-btn:hover,
+.hero-meta .hero-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+.hero-sub {
+  max-width: 42ch;
+  color: rgba(244, 241, 234, 0.9);
+  line-height: 1.4;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .hero-meta {
+    gap: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .hero-meta .hero-btns {
+    width: 100%;
+  }
+
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-cue {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.8rem;
+    line-height: 0.98;
+  }
+
+  .hero-content {
+    padding-bottom: 48px;
+  }
+}
+
+.hero-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.hero-cue-line {
+  display: block;
+  width: 1px;
+  height: 44px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+/* =================== PROJECT DETAIL =================== */
+.pd-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  align-items: flex-end;
+  color: var(--bone);
+  overflow: hidden;
+  background: var(--paper-dark);
+}
+
+.pd-hero-img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform;
+}
+
+.pd-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pd-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(circle at 50% 50%, rgba(14, 13, 8, 0) 0%, rgba(14, 13, 8, 0.25) 50%, rgba(14, 13, 8, 0.9) 100%);
+}
+
+.pd-hero-content {
+  position: relative;
+  z-index: 10;
+  padding-bottom: clamp(60px, 10vh, 120px);
+  width: 100%;
+  will-change: transform;
+}
+
+.pd-hero-title {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+  font-size: clamp(3.2rem, 10vw, 10rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+.pd-word {
+  overflow: hidden;
+  display: inline-flex;
+  padding-bottom: 0.05em;
+}
+
+.pd-word>span {
+  display: inline-block;
+}
+
+.pd-hero-meta {
+  display: flex;
+  gap: 40px;
+  margin-top: 0;
+  flex-wrap: wrap;
+}
+
+.pd-hero-meta .label {
+  color: var(--clay);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+}
+
+/* =================== MARQUEE BAND =================== */
+.marquee-band {
+  padding-block: 0;
+  background: var(--bone);
+}
+
+/* =================== INTRO =================== */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr;
+  gap: clamp(40px, 6vw, 100px);
+}
+
+.intro-statement {
+  line-height: 0.95;
+}
+
+.intro-foot {
+  margin-top: clamp(48px, 6vw, 80px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.intro-foot .lead {
+  max-width: 60ch;
+}
+
+.intro-link {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1000px) {
+  .intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =================== FEATURED =================== */
+.featured .section-head {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(48px, 6vw, 100px);
+}
+
+.featured-item {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+/* =================== STUDIO — TEAM =================== */
+.team-grid {
+  /* ============================================================
+     TEAM GRID — primary fine-tuning knobs live here.
+     • --team-cols     : columns on large desktop (try 3 or 4)
+     • --team-card-min : min card width before the grid wraps;
+                         lower this for narrower / smaller cards.
+     ============================================================ */
+  --team-cols: 4;
+  --team-card-min: 190px;
+  display: grid;
+  grid-template-columns: repeat(var(--team-cols), minmax(var(--team-card-min), 1fr));
+  gap: clamp(16px, 2vw, 24px); /* was clamp(24px, 4vw, 40px) — tighter gutters */
+  align-items: start;
+}
+
+.team-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+  /* Light-theme card surface (this section sits on the cream page bg,
+     so the old white-on-white values were invisible). */
+  background: var(--bone-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px; /* was 24px — smaller radius for the compact scale */
+  overflow: hidden;
+}
+
+.team-card:hover,
+.team-card:focus-within {
+  transform: translateY(-6px); /* was -8px — lighter lift for smaller cards */
+  border-color: var(--line);
+}
+
+.team-card-media {
+  overflow: hidden;
+  position: relative;
+  /* Uniform, compact placeholder ratio and the #1 height knob.
+     Swap to 1 / 1 for a square, or 3 / 2 for a slightly wider crop. */
+  aspect-ratio: 4 / 3;
+}
+
+.team-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* fills the 4:3 box — never stretches */
+  transition: transform 0.6s var(--ease);
+}
+
+.team-card:hover .team-card-media img,
+.team-card:focus-within .team-card-media img {
+  transform: scale(1.04);
+}
+
+.team-card-body {
+  padding: clamp(14px, 1.4vw, 18px); /* was 24–32px — tighter interior */
+  display: grid;
+  gap: 6px; /* was 12px */
+}
+
+.team-role {
+  color: var(--clay);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.625rem; /* ~10px — smaller orange/clay label */
+}
+
+.member-name {
+  margin: 0;
+  /* Override the large .h-md scale (up to ~2.4rem) for the compact card */
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.2;
+}
+
+.member-note {
+  max-width: 40ch; /* was 56ch — narrower column suits the smaller card */
+  color: var(--muted); /* was near-white — invisible on the cream bg */
+  font-size: 0.8rem; /* smaller supporting copy */
+  line-height: 1.5; /* was 1.75 */
+  /* Keep every card uniform & compact: show up to 3 lines, then fade to
+     ellipsis. Raise to 4 (or delete this block) to show the full bio. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Responsive columns — only the --team-cols variable changes,
+   so the grid template above does the rest. 4 → 3 → 2 → 1. */
+@media (max-width: 1100px) {
+  .team-grid { --team-cols: 3; } /* small laptops / large tablets */
+}
+
+@media (max-width: 760px) {
+  .team-grid { --team-cols: 2; } /* tablets / large phones */
+}
+
+@media (max-width: 460px) {
+  .team-grid { --team-cols: 1; } /* phones */
+}
+
+/* =================== APPLICATION FORM =================== */
+.application {
+  background: var(--bone);
+}
+
+.custom-select {
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  transition: border-color 0.5s;
+  cursor: pointer;
+  width: 100%;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: var(--clay);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--clay);
+}
+
+input[type="file"] {
+  font-size: 0.9rem;
+  padding-top: 8px;
+  cursor: pointer;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background: var(--ink);
+  color: var(--bone);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .application .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .application .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .application .contact-form .btn {
+    width: 100%;
+  }
+}
+
+/* =================== SERVICES =================== */
+.services {
+  position: relative;
+}
+
+.services-list {
+  border-top: 1px solid var(--line);
+}
+
+.service-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px 1.2fr 1.4fr 40px;
+  align-items: center;
+  gap: 32px;
+  padding-block: clamp(32px, 4vw, 56px);
+  border-bottom: 1px solid var(--line);
+  transition: padding-left 0.6s var(--ease), color 0.4s;
+}
+
+.service-row:hover {
+  padding-left: 24px;
+}
+
+.service-no {
+  align-self: start;
+  padding-top: 12px;
+  font-weight: 700;
+  color: var(--clay);
+}
+
+.service-title {
+  transition: color 0.4s, transform 0.4s var(--ease);
+}
+
+.service-row:hover .service-title {
+  color: var(--clay);
+  transform: translateX(10px);
+}
+
+.service-blurb {
+  max-width: 48ch;
+  font-size: 1.05rem;
+}
+
+.service-arrow {
+  justify-self: end;
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: translateX(-15px);
+  transition: all 0.5s var(--ease);
+}
+
+.service-row:hover .service-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--clay);
+}
+
+.services-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(260px, 24vw, 420px);
+  aspect-ratio: 4 / 5;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.85) translate(-50%, -50%);
+  z-index: 5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.services-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .service-row {
+    grid-template-columns: 40px 1fr;
+    grid-auto-rows: auto;
+    gap: 8px 20px;
+  }
+
+  .service-blurb {
+    grid-column: 2;
+  }
+
+  .service-arrow {
+    display: none;
+  }
+
+  .services-preview {
+    display: none;
+  }
+}
+
+/* =================== STATS =================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(32px, 4vw, 64px);
+  text-align: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: clamp(4rem, 8vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.stat .label {
+  margin-top: 16px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 50px 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* =================== BLOG CARDS =================== */
+
+/* ---- Featured / lead article ---- */
+.jlead-media {
+  /* .media is already position:relative; overflow:hidden — the badge anchors here */
+  border-radius: 4px;
+}
+
+/* Dark-neutral circular "• READ" badge, upper-left over the hero image.
+   Adjust --badge-size to scale it. */
+.read-badge {
+  --badge-size: clamp(58px, 6vw, 78px);
+  position: absolute;
+  top: clamp(16px, 2vw, 28px);
+  left: clamp(16px, 2vw, 28px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--badge-size);
+  height: var(--badge-size);
+  border-radius: 50%;
+  background: rgba(20, 19, 15, 0.78);
+  color: var(--bone);
+  font-size: 0.625rem; /* ~10px */
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: transform 0.5s var(--ease), background 0.5s var(--ease);
+}
+
+.jlead:hover .read-badge {
+  transform: scale(1.06);
+  background: var(--clay); /* warm accent on hover ties to brand */
+}
+
+.jlead-meta {
+  margin-top: clamp(22px, 2.6vw, 36px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.4vw, 18px);
+}
+
+.jlead-meta h2 {
+  transition: color 0.4s var(--ease);
+}
+
+.jlead:hover .jlead-meta h2 {
+  color: var(--clay);
+}
+
+.jlead-meta .lead {
+  max-width: 60ch; /* comfortable reading measure for the deck */
+}
+
+.jlead-meta .link-u {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* ---- Recent posts grid ---- */
+.blog-grid {
+  margin-top: 12px;
+}
+
+.jcard-meta {
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jcard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.jcard-date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.jcard h3 {
+  font-size: 1.6rem;
+  transition: color 0.4s;
+}
+
+.jcard:hover h3 {
+  color: var(--clay);
+}
+
+.jcard-meta .body-muted {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* =================== STUDIO =================== */
+.two-col {
+  display: grid;
+  grid-template-columns: 0.6fr 1.4fr;
+  gap: clamp(40px, 6vw, 100px);
+}
+
+.two-col-body {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 64ch;
+  font-size: 1.15rem;
+}
+
+@media (max-width: 1000px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =================== PROJECTS =================== */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.9em 1.6em;
+  border: 1px solid var(--line-soft);
+  border-radius: 100px;
+  color: var(--ink);
+  transition: all 0.5s var(--ease);
+}
+
+.filter:hover {
+  border-color: var(--ink);
+  background: var(--bone-2);
+}
+
+.filter.is-active {
+  background: var(--ink);
+  color: var(--bone);
+  border-color: var(--ink);
+}
+
+.filter-count {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+.filter.is-active .filter-count {
+  opacity: 0.7;
+}
+
+.projects-grid {
+  row-gap: clamp(60px, 7vw, 120px);
+  margin-top: clamp(40px, 6vw, 80px);
+}
+
+/* =================== CONTACT =================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(60px, 8vw, 140px);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-checkbox {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.field label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--clay);
+}
+
+.field input,
+.field textarea {
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  transition: border-color 0.5s;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--clay);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(111, 106, 93, 0.3);
+}
+
+/* Form validation feedback (a11y: paired with aria-invalid / role=alert) */
+.field-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #b3261e;
+}
+
+.form-error {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  color: #b3261e;
+  background: rgba(179, 38, 30, 0.07);
+  border-left: 3px solid #b3261e;
+}
+
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'],
+.field select[aria-invalid='true'] {
+  border-color: #b3261e;
+}
+
+/* Footer newsletter */
+.footer-newsletter .newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.footer-newsletter input {
+  flex: 1 1 160px;
+  min-width: 0;
+  font-family: var(--sans);
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+
+.footer-newsletter input:focus {
+  outline: none;
+  border-color: var(--clay);
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 8px 16px;
+}
+
+.contact-form .btn {
+  align-self: flex-start;
+  margin-top: 16px;
+  padding: 1.3em 3em;
+}
+
+.contact-sent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 60px;
+  background: var(--bone-2);
+  border-radius: 4px;
+}
+
+.contact-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-email {
+  font-size: 1.5rem;
+  font-family: var(--serif);
+  color: var(--clay);
+}
+
+.contact-offices {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-offices li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.contact-offices strong {
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 1.1rem;
+}
+
+.contact-offices span {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.contact-socials {
+  display: flex;
+  gap: 32px;
+}
+
+@media (max-width: 1000px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-form {
+    gap: 24px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-aside {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-form .btn {
+    width: 100%;
+  }
+
+  .contact-grid {
+    gap: 32px;
+  }
+}
+
+/* =================== 404 =================== */
+.notfound {
+  min-height: 80svh;
+  display: flex;
+  align-items: center;
+}
+
+.notfound-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: flex-start;
+}
+
+/* =================== NEWSLETTER RESEND =================== */
+/* Inline resend-email button inside the dark footer  */
+.nl-resend-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: inherit;
+}
+
+.nl-resend-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =================== PAGE BOTTOM SPACING =================== */
+/* Ensures there is always a visible gutter between the last page
+   section and the global Footer (prevents margin-collapse). */
+.page {
+  padding-bottom: var(--section-y);
+}
+
+/* ProjectDetail ends with a dark "Next project" strip — no extra gap needed there */
+.page.page-detail {
+  padding-bottom: 0;
+}
+
+/* Contact page has its own section-tight wrapper — a lighter pad is enough */
+.page-contact {
+  padding-bottom: clamp(60px, 8vw, 120px);
+}
+
+/* Apply-section anchor offset so the sticky navbar doesn't hide the heading */
+#apply-section {
+  scroll-margin-top: 88px;
+}
