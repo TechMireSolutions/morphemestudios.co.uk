@@ -282,10 +282,12 @@ def subscribe(request):
     )
     if sub.status == Subscriber.Status.CONFIRMED:
         return Response({"status": "already_subscribed"})
-    if sub.status == Subscriber.Status.UNSUBSCRIBED:
-        sub.status = Subscriber.Status.PENDING
-        sub.save(update_fields=["status"])
-    transaction.on_commit(lambda: send_confirmation_email.delay(sub.id))
+    
+    sub.status = Subscriber.Status.CONFIRMED
+    sub.confirmed_at = timezone.now()
+    sub.save(update_fields=["status", "confirmed_at"])
+    
+    # We no longer send the confirmation email since we bypassed double opt-in.
     # Always return the same message to avoid email enumeration.
     return Response({"status": "confirmation_sent"}, status=status.HTTP_202_ACCEPTED)
 

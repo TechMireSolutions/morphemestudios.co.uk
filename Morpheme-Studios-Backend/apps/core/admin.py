@@ -10,7 +10,7 @@ from .models import SeoMeta
 from .models import Subscriber
 from .models import TeamMember
 from .models import Testimonial
-from .models import User
+from .models import User, NotificationSetting
 from apps.core.models import Media
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -37,6 +37,19 @@ class OfficeAdmin(admin.ModelAdmin):
 class SiteSettingAdmin(admin.ModelAdmin):
     list_display = ("key", "updated_at")
     search_fields = ("key",)
+
+
+@admin.register(NotificationSetting)
+class NotificationSettingAdmin(admin.ModelAdmin):
+    list_display = ("email",)
+    
+    def has_add_permission(self, request):
+        # We only want one singleton settings object
+        return False if self.model.objects.count() > 0 else super().has_add_permission(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 
 @admin.register(RedirectRule)

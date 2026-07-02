@@ -812,3 +812,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def manages_seo(self) -> bool:
         return self.is_admin_level or self.role == Role.SEO_MANAGER
+class NotificationSetting(models.Model):
+    "Global configuration for system notifications."
+
+    email = models.EmailField(default="techmiresolutions@gmail.com")
+
+    class Meta:
+        verbose_name = "Notification Setting"
+        verbose_name_plural = "Notification Settings"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls) -> "NotificationSetting":
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
