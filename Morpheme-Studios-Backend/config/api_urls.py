@@ -8,25 +8,25 @@ from __future__ import annotations
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from apps.audit.admin_api import AuditLogViewSet
-from apps.blog.admin_api import AdminBlogPostViewSet
-from apps.blog.views import BlogCategoryViewSet, BlogPostViewSet, TagViewSet
-from apps.careers.admin_api import AdminApplicationViewSet
-from apps.careers.views import JobApplicationCreateView, JobOpeningViewSet
+from apps.core.admin_api import AuditLogViewSet
+from apps.core.admin_api import AdminBlogPostViewSet
+from apps.core.views import BlogCategoryViewSet, BlogPostViewSet, TagViewSet
+from apps.core.admin_api import AdminApplicationViewSet
+from apps.core.views import JobApplicationCreateView, JobOpeningViewSet
 from apps.core import api as core_api
 from apps.core.admin_api import dashboard_stats
 from apps.core.api import OfficeViewSet
-from apps.leads.admin_api import AdminLeadViewSet
-from apps.leads.views import LeadCreateView
-from apps.newsletter import views as newsletter_views
-from apps.projects.admin_api import AdminProjectViewSet
-from apps.projects.views import ProjectCategoryViewSet, ProjectViewSet
-from apps.seo.views import seo_meta
-from apps.team.admin_api import AdminTeamMemberViewSet
-from apps.team.views import TeamMemberViewSet
-from apps.testimonials.admin_api import AdminTestimonialViewSet
-from apps.testimonials.views import TestimonialViewSet
-from apps.users import api as auth_api
+from apps.core.admin_api import AdminLeadViewSet
+from apps.core.views import LeadCreateView
+from apps.core import views as newsletter_views
+from apps.core.admin_api import AdminProjectViewSet
+from apps.core.views import ProjectCategoryViewSet, ProjectViewSet
+from apps.core.views import seo_meta
+from apps.core.admin_api import AdminTeamMemberViewSet
+from apps.core.views import TeamMemberViewSet
+from apps.core.admin_api import AdminTestimonialViewSet
+from apps.core.views import TestimonialViewSet
+from apps.core import api as auth_api
 
 # --- Public read ---
 # NB: register sub-resources (categories/tags) BEFORE their parent detail

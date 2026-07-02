@@ -45,7 +45,7 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.
 SITE_URL = env("SITE_URL", default="http://localhost:5173")          # frontend
 API_URL = env("API_URL", default="http://localhost:8000")            # this API
 
-AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = "core.User"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -64,17 +64,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     # Local apps
     "apps.core",
-    "apps.users",
-    "apps.media",
-    "apps.seo",
-    "apps.projects",
-    "apps.blog",
-    "apps.team",
-    "apps.testimonials",
-    "apps.careers",
-    "apps.leads",
-    "apps.newsletter",
-    "apps.audit",
 ]
 
 MIDDLEWARE = [
@@ -89,7 +78,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "apps.audit.middleware.AuditContextMiddleware",
+    "apps.core.middleware.AuditContextMiddleware",
     "axes.middleware.AxesMiddleware",
 ]
 

@@ -11,6 +11,7 @@ Blog is intentionally NOT touched (legacy blog is 100% spam).
 
 Usage:  python manage.py import_legacy_projects
 """
+
 from __future__ import annotations
 
 import html
@@ -23,8 +24,8 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.html import strip_tags
 
-from apps.media.models import Media
-from apps.projects.models import Project, ProjectCategory, ProjectImage
+from apps.core.models import Media
+from apps.core.models import Project, ProjectCategory, ProjectImage
 
 WP_API = "https://morphemestudios.com/wp-json/wp/v2/projects?per_page=100&_embed=1"
 
@@ -43,7 +44,7 @@ CREATE = {
     "high-mark-one": "architecture",
     "nhs-general-practice-pinner": "architecture",
     "darulsehat-hospital-liaquat-medical-college": "architecture",
-    "pynnacles-grove-residences": "residential",   # kept SEPARATE from Pynnacles Close
+    "pynnacles-grove-residences": "residential",  # kept SEPARATE from Pynnacles Close
 }
 # legacy slug -> existing DB slug to enrich (no duplicate)
 MERGE = {
@@ -57,7 +58,13 @@ class Command(BaseCommand):
     help = "Import genuine historical projects from the legacy WordPress site."
 
     def handle(self, *args, **opts):
-        self.counts = {"created": 0, "merged": 0, "media": 0, "gallery": 0, "skipped_img": 0}
+        self.counts = {
+            "created": 0,
+            "merged": 0,
+            "media": 0,
+            "gallery": 0,
+            "skipped_img": 0,
+        }
         self._cache: dict[str, Media] = {}
 
         items = self._fetch_projects()
@@ -76,22 +83,32 @@ class Command(BaseCommand):
             if it:
                 self._merge(it, db_slug)
 
-        self.stdout.write(self.style.SUCCESS(
-            "Legacy import complete: " + ", ".join(f"{k}={v}" for k, v in self.counts.items())))
+        self.stdout.write(
+            self.style.SUCCESS(
+                "Legacy import complete: "
+                + ", ".join(f"{k}={v}" for k, v in self.counts.items())
+            )
+        )
 
     # ---- WP API ----
     def _fetch_projects(self) -> list:
-        req = urllib.request.Request(WP_API, headers={"User-Agent": "Mozilla/5.0 migration"})
+        req = urllib.request.Request(
+            WP_API, headers={"User-Agent": "Mozilla/5.0 migration"}
+        )
         with urllib.request.urlopen(req, timeout=30) as r:  # noqa: S310 - fixed legacy host
             return json.loads(r.read().decode("utf-8"))
 
     @staticmethod
     def _title(it) -> str:
-        return html.unescape(strip_tags(it.get("title", {}).get("rendered", ""))).strip()
+        return html.unescape(
+            strip_tags(it.get("title", {}).get("rendered", ""))
+        ).strip()
 
     @staticmethod
     def _text(it) -> str:
-        return html.unescape(strip_tags(it.get("content", {}).get("rendered", ""))).strip()
+        return html.unescape(
+            strip_tags(it.get("content", {}).get("rendered", ""))
+        ).strip()
 
     def _featured_url(self, it) -> str | None:
         try:
@@ -108,9 +125,13 @@ class Command(BaseCommand):
                 continue
             low = u.lower()
             # Skip site chrome: WP custom-logo is published as "cropped-*.png".
-            if any(x in low for x in ("logo", "favicon", "icon", "placeholder", "cropped-")):
+            if any(
+                x in low for x in ("logo", "favicon", "icon", "placeholder", "cropped-")
+            ):
                 continue
-            base = re.sub(r"-\d+x\d+(?=\.\w+($|\?))", "", u)  # collapse thumbnails to original
+            base = re.sub(
+                r"-\d+x\d+(?=\.\w+($|\?))", "", u
+            )  # collapse thumbnails to original
             if base not in seen:
                 seen.add(base)
                 out.append(base)
@@ -125,13 +146,17 @@ class Command(BaseCommand):
         if not link:
             return []
         try:
-            req = urllib.request.Request(link, headers={"User-Agent": "Mozilla/5.0 migration"})
+            req = urllib.request.Request(
+                link, headers={"User-Agent": "Mozilla/5.0 migration"}
+            )
             with urllib.request.urlopen(req, timeout=25) as r:  # noqa: S310 - fixed legacy host
                 html_doc = r.read().decode("utf-8", errors="replace")
         except Exception as exc:  # noqa: BLE001
             self.stderr.write(f"  ! page scrape failed ({link[:70]}…): {exc}")
             return []
-        urls = re.findall(r'(?:src|data-src|href)="([^"]+\.(?:jpg|jpeg|png|webp))"', html_doc, re.I)
+        urls = re.findall(
+            r'(?:src|data-src|href)="([^"]+\.(?:jpg|jpeg|png|webp))"', html_doc, re.I
+        )
         return self._dedup_uploads(urls)
 
     # ---- media ----
@@ -146,15 +171,22 @@ class Command(BaseCommand):
             self._cache[url] = existing
             return existing
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 migration"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "Mozilla/5.0 migration"}
+            )
             with urllib.request.urlopen(req, timeout=25) as r:  # noqa: S310
                 raw = r.read()
         except Exception as exc:  # noqa: BLE001 - resilient
             self.stderr.write(f"  ! image fetch failed ({url[:70]}…): {exc}")
             self.counts["skipped_img"] += 1
             return None
-        m = Media(type=Media.Type.IMAGE, is_private=False, alt_text=(alt or key)[:255],
-                  original_name=key, mime="image/jpeg")
+        m = Media(
+            type=Media.Type.IMAGE,
+            is_private=False,
+            alt_text=(alt or key)[:255],
+            original_name=key,
+            mime="image/jpeg",
+        )
         m.file.save(key, ContentFile(raw), save=True)
         self.counts["media"] += 1
         self._cache[url] = m
@@ -178,7 +210,7 @@ class Command(BaseCommand):
         body = self._text(it)
         imgs = self._content_image_urls(it)
         if not imgs and not self._featured_url(it):
-            imgs = self._page_image_urls(it.get("link", ""))   # page-builder fallback
+            imgs = self._page_image_urls(it.get("link", ""))  # page-builder fallback
         # Cover = featured image, else first available image.
         cover_url = self._featured_url(it) or (imgs[0] if imgs else None)
         cover = self._media(cover_url, title)
@@ -186,9 +218,14 @@ class Command(BaseCommand):
         obj, _ = Project.objects.update_or_create(
             slug=slug,
             defaults=dict(
-                title=title, category=cat, type=(cat.label if cat else ""),
-                excerpt=body[:380], description=body, cover=cover,
-                status="published", published_at=timezone.now(),
+                title=title,
+                category=cat,
+                type=(cat.label if cat else ""),
+                excerpt=body[:380],
+                description=body,
+                cover=cover,
+                status="published",
+                published_at=timezone.now(),
             ),
         )
         gallery = list(imgs)

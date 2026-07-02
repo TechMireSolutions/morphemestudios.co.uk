@@ -1,3 +1,6 @@
+
+# === media/signing.py ===
+
 from django.core.signing import TimestampSigner
 
 def make_token(media_id: int) -> str:

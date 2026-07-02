@@ -1,8 +1,12 @@
+from __future__ import annotations
+
+# === core/sanitize.py ===
+
 """Server-side HTML sanitization for stored rich text (defense against stored
 XSS). Uses nh3 (Rust ammonia bindings) with a strict allowlist — not a denylist,
 and not reliant on CSP. Applied at write time so the stored value is always safe.
 """
-from __future__ import annotations
+
 
 import nh3
 
@@ -10,13 +14,39 @@ import nh3
 # quotes, code, images. Everything else (script, style, iframe, object, form,
 # event handlers, etc.) is stripped.
 ALLOWED_TAGS: set[str] = {
-    "p", "br", "hr", "span", "div",
-    "strong", "b", "em", "i", "u", "s", "sub", "sup",
-    "blockquote", "code", "pre",
-    "ul", "ol", "li",
-    "h2", "h3", "h4", "h5",
-    "a", "img", "figure", "figcaption",
-    "table", "thead", "tbody", "tr", "th", "td",
+    "p",
+    "br",
+    "hr",
+    "span",
+    "div",
+    "strong",
+    "b",
+    "em",
+    "i",
+    "u",
+    "s",
+    "sub",
+    "sup",
+    "blockquote",
+    "code",
+    "pre",
+    "ul",
+    "ol",
+    "li",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "a",
+    "img",
+    "figure",
+    "figcaption",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
 }
 
 ALLOWED_ATTRIBUTES: dict[str, set[str]] = {

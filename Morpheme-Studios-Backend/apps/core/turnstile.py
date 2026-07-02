@@ -3,6 +3,7 @@
 Disabled (always-pass) when TURNSTILE_ENABLED is false, so local dev and tests
 don't need a live key. Uses stdlib urllib to avoid an extra dependency.
 """
+
 from __future__ import annotations
 
 import json

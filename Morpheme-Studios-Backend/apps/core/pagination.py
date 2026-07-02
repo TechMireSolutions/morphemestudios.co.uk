@@ -1,5 +1,9 @@
-"""Project-wide pagination (referenced by REST_FRAMEWORK in settings)."""
 from __future__ import annotations
+
+# === core/pagination.py ===
+
+"""Project-wide pagination (referenced by REST_FRAMEWORK in settings)."""
+
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response

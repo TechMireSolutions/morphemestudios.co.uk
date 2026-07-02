@@ -1,5 +1,9 @@
-"""Role-based DRF permission classes (architecture §5)."""
 from __future__ import annotations
+
+# === users/permissions.py ===
+
+"""Role-based DRF permission classes (architecture §5)."""
+
 
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 
@@ -69,4 +73,9 @@ class CanManageApplications(BasePermission):
 
     def has_permission(self, request, view) -> bool:
         u = request.user
-        return bool(u and u.is_authenticated and u.is_staff and getattr(u, "is_admin_level", False))
+        return bool(
+            u
+            and u.is_authenticated
+            and u.is_staff
+            and getattr(u, "is_admin_level", False)
+        )

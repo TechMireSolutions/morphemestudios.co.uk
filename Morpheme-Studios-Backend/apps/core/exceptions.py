@@ -1,10 +1,14 @@
+from __future__ import annotations
+
+# === core/exceptions.py ===
+
 """Uniform error envelope for the API.
 
 Every error response is shaped as:
     { "error": { "code": str, "message": str, "fields"?: {field: [msgs]} } }
 matching the API spec §7.5.
 """
-from __future__ import annotations
+
 
 from rest_framework import status as http_status
 from rest_framework.response import Response

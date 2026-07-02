@@ -11,8 +11,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.media.views import protected_download
-from apps.seo.views import robots_txt, sitemap_xml
+from apps.core.views import protected_download, robots_txt, sitemap_xml
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
