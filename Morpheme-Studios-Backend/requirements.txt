@@ -14,6 +14,7 @@ django-csp==3.8             # Content-Security-Policy
 
 # Database
 psycopg[binary]>=3.2.10
+mysqlclient==2.2.8
 
 # Background tasks / cache (Celery worker + Redis broker & cache)
 celery==5.4.0
