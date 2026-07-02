@@ -14,7 +14,7 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 
 # 2. Install dependencies (dev set)
-pip install -r requirements/dev.txt
+pip install -r requirements.txt
 
 # 3. Create your local env file. Leaving DATABASE_URL empty makes Django use
 #    the local SQLite file (db.sqlite3) — no PostgreSQL needed for local dev.
