@@ -1,13 +1,15 @@
 // Map backend (DRF) payloads onto the shape the existing components already
 // consume, so wiring the API needs no component rewrites.
+import { absMedia } from './api.js'
+
 const PLACEHOLDER = '/placeholder.svg'
 
 export function normalizeProject(p) {
   if (!p) return null
   const gallery = Array.isArray(p.gallery)
-    ? p.gallery.map((g) => g?.media?.url).filter(Boolean)
+    ? p.gallery.map((g) => absMedia(g?.media?.file)).filter(Boolean)
     : []
-  const cover = p.cover?.url || PLACEHOLDER
+  const cover = absMedia(p.cover?.file) || PLACEHOLDER
   return {
     slug: p.slug,
     title: p.title,
@@ -26,7 +28,7 @@ export function normalizeProject(p) {
 
 export function normalizePost(p) {
   if (!p) return null
-  const cover = p.cover?.url || PLACEHOLDER
+  const cover = absMedia(p.cover?.file) || PLACEHOLDER
   return {
     slug: p.slug,
     title: p.title,
@@ -59,6 +61,6 @@ export function normalizeTeamMember(m) {
     name: m.name,
     role: m.role || '',
     note: m.bio || '',
-    image: m.photo?.url || '/assets/team-placeholder.svg',
+    image: absMedia(m.photo?.file) || '/assets/team-placeholder.svg',
   }
 }
