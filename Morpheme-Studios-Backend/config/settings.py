@@ -105,10 +105,28 @@ TEMPLATES = [
 SITE_ID = 1
 
 # ---------------------------------------------------------------------------
-# Database (env-driven; Postgres in prod/Docker, SQLite fallback for quick local)
+# Database (env-driven; MySQL/Postgres in prod, SQLite fallback for quick local)
 # ---------------------------------------------------------------------------
-if env("DATABASE_URL", default=""):
+DATABASE_URL = env("DATABASE_URL", default="").strip()
+MYSQL_DATABASE = env("MYSQL_DATABASE", default="").strip()
+
+if DATABASE_URL:
     DATABASES = {"default": env.db("DATABASE_URL")}
+elif MYSQL_DATABASE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": MYSQL_DATABASE,
+            "USER": env("MYSQL_USER"),
+            "PASSWORD": env("MYSQL_PASSWORD"),
+            "HOST": env("MYSQL_HOST", default="127.0.0.1"),
+            "PORT": env("MYSQL_PORT", default="3306"),
+            "OPTIONS": {
+                "charset": "utf8mb4",
+                "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 else:
     DATABASES = {
         "default": {
@@ -117,6 +135,13 @@ else:
         }
     }
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
+if DATABASES["default"]["ENGINE"] == "django.db.backends.mysql":
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"].setdefault("charset", "utf8mb4")
+    DATABASES["default"]["OPTIONS"].setdefault(
+        "init_command",
+        "SET sql_mode='STRICT_TRANS_TABLES'",
+    )
 
 # ---------------------------------------------------------------------------
 # Password hashing — Argon2 first (per security architecture)
@@ -207,6 +232,7 @@ JWT_REFRESH_COOKIE_PATH = "/api/v1/auth"
 # ---------------------------------------------------------------------------
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:5173"])
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORIGINS)
 
 # ---------------------------------------------------------------------------
 # Cache + Celery (Redis)
@@ -250,18 +276,18 @@ CELERY_RESULT_EXPIRES = 3600
 # Static & media
 # ---------------------------------------------------------------------------
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = Path(env("STATIC_ROOT", default=str(BASE_DIR / "staticfiles")))
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(env("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 # Private uploads (CVs/portfolios) live under a separate root. The public,
 # signed download endpoint is Django's `/protected/<token>`; Django streams the
 # bytes via X-Accel-Redirect to this INTERNAL Nginx location (must differ from
 # the public path to avoid a routing collision).
-PRIVATE_MEDIA_ROOT = BASE_DIR / "private-media"
+PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT", default=str(BASE_DIR / "private-media")))
 PRIVATE_MEDIA_URL = "/_protected/"
 MEDIA_SIGNED_URL_TTL = env.int("MEDIA_SIGNED_URL_TTL", default=300)  # seconds
 
@@ -374,10 +400,10 @@ else:
             "(the insecure development default is not allowed)."
         )
 
-    if not env("DATABASE_URL", default=""):
+    if not DATABASE_URL and not MYSQL_DATABASE:
         raise ImproperlyConfigured(
-            "DATABASE_URL must be set in production (the SQLite fallback is for local "
-            "development only)."
+            "DATABASE_URL or MYSQL_DATABASE/MYSQL_USER/MYSQL_PASSWORD must be set in "
+            "production (the SQLite fallback is for local development only)."
         )
 
     # Hosts/origins must be explicit in production.
