@@ -12,7 +12,7 @@ import { api, absMedia } from '../lib/api.js'
 import { useApi } from '../lib/useApi.js'
 import { normalizeProject, normalizePost } from '../lib/normalize.js'
 
-const HERO_IMG = '/assets/hero-pynnacles.jpg'   // static brand asset (not DB content)
+const HERO_IMG = '/assets/architecture.jpg'   // static brand asset (not DB content)
 
 export default function Home() {
   const heroRef = useRef(null)

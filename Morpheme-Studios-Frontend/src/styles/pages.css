@@ -451,94 +451,107 @@
   --team-card-min: 190px;
   display: grid;
   grid-template-columns: repeat(var(--team-cols), minmax(var(--team-card-min), 1fr));
-  gap: clamp(16px, 2vw, 24px); /* was clamp(24px, 4vw, 40px) — tighter gutters */
-  align-items: start;
+  gap: clamp(20px, 3vw, 32px);
+  align-items: stretch;
+  /* Make all cards in a row equal height */
 }
 
 .team-card {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 0;
-  /* Light-theme card surface (this section sits on the cream page bg,
-     so the old white-on-white values were invisible). */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: var(--bone-2);
   border: 1px solid var(--line-soft);
-  border-radius: 16px; /* was 24px — smaller radius for the compact scale */
+  border-radius: 12px;
   overflow: hidden;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 }
 
 .team-card:hover,
 .team-card:focus-within {
-  transform: translateY(-6px); /* was -8px — lighter lift for smaller cards */
+  transform: translateY(-8px);
   border-color: var(--line);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.08);
 }
 
 .team-card-media {
   overflow: hidden;
   position: relative;
-  /* Uniform, compact placeholder ratio and the #1 height knob.
-     Swap to 1 / 1 for a square, or 3 / 2 for a slightly wider crop. */
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
+  /* Elegant square portrait ratio */
 }
 
 .team-card-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* fills the 4:3 box — never stretches */
-  transition: transform 0.6s var(--ease);
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .team-card:hover .team-card-media img,
 .team-card:focus-within .team-card-media img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .team-card-body {
-  padding: clamp(14px, 1.4vw, 18px); /* was 24–32px — tighter interior */
-  display: grid;
-  gap: 6px; /* was 12px */
+  padding: clamp(20px, 2vw, 28px);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 12px;
 }
 
 .team-role {
   color: var(--clay);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-size: 0.625rem; /* ~10px — smaller orange/clay label */
+  font-size: 0.65rem;
+  font-weight: 500;
+  margin: 0;
 }
 
 .member-name {
   margin: 0;
-  /* Override the large .h-md scale (up to ~2.4rem) for the compact card */
-  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
   line-height: 1.2;
+  font-weight: 400;
 }
 
 .member-note {
-  max-width: 40ch; /* was 56ch — narrower column suits the smaller card */
-  color: var(--muted); /* was near-white — invisible on the cream bg */
-  font-size: 0.8rem; /* smaller supporting copy */
-  line-height: 1.5; /* was 1.75 */
-  /* Keep every card uniform & compact: show up to 3 lines, then fade to
-     ellipsis. Raise to 4 (or delete this block) to show the full bio. */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0;
+  display: block;
+  /* Show full bio */
 }
 
 /* Responsive columns — only the --team-cols variable changes,
    so the grid template above does the rest. 4 → 3 → 2 → 1. */
 @media (max-width: 1100px) {
-  .team-grid { --team-cols: 3; } /* small laptops / large tablets */
+  .team-grid {
+    --team-cols: 3;
+  }
+
+  /* small laptops / large tablets */
 }
 
 @media (max-width: 760px) {
-  .team-grid { --team-cols: 2; } /* tablets / large phones */
+  .team-grid {
+    --team-cols: 2;
+  }
+
+  /* tablets / large phones */
 }
 
 @media (max-width: 460px) {
-  .team-grid { --team-cols: 1; } /* phones */
+  .team-grid {
+    --team-cols: 1;
+  }
+
+  /* phones */
 }
 
 /* =================== APPLICATION FORM =================== */
@@ -772,7 +785,8 @@ input[type="file"]::-webkit-file-upload-button {
   border-radius: 50%;
   background: rgba(20, 19, 15, 0.78);
   color: var(--bone);
-  font-size: 0.625rem; /* ~10px */
+  font-size: 0.625rem;
+  /* ~10px */
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -783,7 +797,8 @@ input[type="file"]::-webkit-file-upload-button {
 
 .jlead:hover .read-badge {
   transform: scale(1.06);
-  background: var(--clay); /* warm accent on hover ties to brand */
+  background: var(--clay);
+  /* warm accent on hover ties to brand */
 }
 
 .jlead-meta {
@@ -802,7 +817,8 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 .jlead-meta .lead {
-  max-width: 60ch; /* comfortable reading measure for the deck */
+  max-width: 60ch;
+  /* comfortable reading measure for the deck */
 }
 
 .jlead-meta .link-u {
