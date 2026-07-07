@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { gsap } from '../lib/gsap.js'
+import { api } from '../lib/api.js'
+import { useApi } from '../lib/useApi.js'
 
 const links = [
   { to: '/projects', label: 'Projects' },
@@ -17,6 +19,14 @@ export default function Navbar() {
   const lastY = useRef(0)
   const menuRef = useRef(null)
   const location = useLocation()
+
+  const { data: blogList } = useApi(
+    () => api.blog({ page_size: 1 }).then((r) => r.results || []),
+    [], { fallback: [] }
+  )
+
+  const hasBlog = blogList.length > 0
+  const dynamicLinks = links.filter((l) => l.to !== '/blog' || hasBlog)
 
   // Hide on scroll-down, reveal on scroll-up
   useEffect(() => {
@@ -60,7 +70,7 @@ export default function Navbar() {
           </Link>
 
           <nav className="nav-links">
-            {links.map((l) => (
+            {dynamicLinks.map((l) => (
               <NavLink
                 key={l.to}
                 to={l.to}
@@ -87,7 +97,7 @@ export default function Navbar() {
         <div className="menu-inner wrap">
           <nav className="menu-nav">
             <Link to="/" className="menu-link-wrap"><span className="menu-link">Home</span></Link>
-            {links.map((l) => (
+            {dynamicLinks.map((l) => (
               <Link key={l.to} to={l.to} className="menu-link-wrap">
                 <span className="menu-link">{l.label}</span>
               </Link>

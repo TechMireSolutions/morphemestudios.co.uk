@@ -24,7 +24,14 @@ export default function Home() {
     [], { fallback: [] })
   const { data: settings } = useApi(() => api.settings(), [], { fallback: {} })
   const blogTop = (blogList || []).slice(0, 3)
-  const services = (settings?.services || []).map((s) => ({ ...s, image: absMedia(s.image) }))
+  const defaultServices = [
+    { no: '01', title: 'Architecture Design', blurb: 'At Morpheme Studios is an Architecture and design services', image: HERO_IMG },
+    { no: '02', title: 'Interior Design', blurb: 'Morpheme Studios’ interior design team complements our architectural designs with carefully curated interiors.', image: HERO_IMG },
+    { no: '03', title: 'Retail & Commercial', blurb: 'Creating engaging spaces for retail and commercial environments.', image: HERO_IMG },
+    { no: '04', title: 'Competition', blurb: 'We breathe new life into existing structures through thoughtful renovation and restoration.', image: HERO_IMG },
+  ]
+  const servicesFromApi = (settings?.services || []).map((s) => ({ ...s, image: absMedia(s.image) }))
+  const services = servicesFromApi.length > 0 ? servicesFromApi : defaultServices
   const stats = settings?.stats || []
 
   // Hero intro + background parallax
@@ -175,6 +182,7 @@ export default function Home() {
       </section>
 
       {/* ---------------- BLOG TEASER ---------------- */}
+      {blogTop.length > 0 && (
       <section className="section blog-teaser">
         <div className="wrap">
           <Reveal className="section-head between items-end">
@@ -206,6 +214,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
     </div>
   )
 }
