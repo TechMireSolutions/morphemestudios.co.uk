@@ -111,6 +111,20 @@ class SiteSetting(models.Model):
         return self.key
 
 
+class Stat(models.Model):
+    """Dynamic stats displayed on the frontend (e.g. Projects Completed 150+)."""
+    label = models.CharField(max_length=120)
+    value = models.PositiveIntegerField(default=0)
+    suffix = models.CharField(max_length=20, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+
+    def __str__(self) -> str:
+        return f"{self.label}: {self.value}{self.suffix}"
+
+
 class RedirectRule(models.Model):
     """301/302 management so old WordPress URLs don't 404 (SEO §9)."""
 
@@ -367,7 +381,7 @@ class JobApplication(models.Model):
         ]
         constraints = [
             models.CheckConstraint(
-                check=models.Q(terms_accepted=True), name="application_terms_required"
+                condition=models.Q(terms_accepted=True), name="application_terms_required"
             ),
         ]
 
@@ -522,6 +536,14 @@ class Subscriber(models.Model):
 class ProjectCategory(models.Model):
     key = models.SlugField(max_length=60, unique=True)
     label = models.CharField(max_length=120)
+    blurb = models.TextField(blank=True, help_text="Short description for the disciplines section.")
+    image = models.ForeignKey(
+        "core.Media",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
     sort_order = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -716,7 +738,7 @@ class Testimonial(PublishableModel):
         ordering = ["sort_order", "-created_at"]
         constraints = [
             models.CheckConstraint(
-                check=models.Q(rating__isnull=True)
+                condition=models.Q(rating__isnull=True)
                 | models.Q(rating__gte=1, rating__lte=5),
                 name="testimonial_rating_range",
             )

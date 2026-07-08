@@ -23,6 +23,10 @@ export default function Home() {
     () => api.blog({ page_size: 3 }).then((r) => (r.results || []).map(normalizePost)),
     [], { fallback: [] })
   const { data: settings } = useApi(() => api.settings(), [], { fallback: {} })
+  const { data: categoryList } = useApi(
+    () => api.projectCategories().then((r) => r.results || r || []), 
+    [], { fallback: [] }
+  )
   const blogTop = (blogList || []).slice(0, 3)
   const defaultServices = [
     { no: '01', title: 'Architecture Design', blurb: 'At Morpheme Studios is an Architecture and design services', image: HERO_IMG },
@@ -30,8 +34,13 @@ export default function Home() {
     { no: '03', title: 'Retail & Commercial', blurb: 'Creating engaging spaces for retail and commercial environments.', image: HERO_IMG },
     { no: '04', title: 'Competition', blurb: 'We breathe new life into existing structures through thoughtful renovation and restoration.', image: HERO_IMG },
   ]
-  const servicesFromApi = (settings?.services || []).map((s) => ({ ...s, image: absMedia(s.image) }))
-  const services = servicesFromApi.length > 0 ? servicesFromApi : defaultServices
+  const servicesFromCategories = categoryList.map((cat, i) => ({
+    no: String(i + 1).padStart(2, '0'),
+    title: cat.label,
+    blurb: cat.blurb || '',
+    image: cat.image ? absMedia(cat.image.file) : HERO_IMG,
+  }))
+  const services = servicesFromCategories.length > 0 ? servicesFromCategories : defaultServices
   const stats = settings?.stats || []
 
   // Hero intro + background parallax

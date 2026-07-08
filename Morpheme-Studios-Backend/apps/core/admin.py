@@ -4,7 +4,7 @@ from .models import AuditLog
 from .models import BlogCategory, BlogPost, Tag
 from .models import JobApplication, JobOpening
 from .models import Lead, LeadNote
-from .models import Office, Page, RedirectRule, SiteSetting
+from .models import Office, Page, RedirectRule, SiteSetting, Stat
 from .models import Project, ProjectCategory, ProjectImage
 from .models import SeoMeta
 from .models import Subscriber
@@ -37,6 +37,13 @@ class OfficeAdmin(admin.ModelAdmin):
 class SiteSettingAdmin(admin.ModelAdmin):
     list_display = ("key", "updated_at")
     search_fields = ("key",)
+
+
+@admin.register(Stat)
+class StatAdmin(admin.ModelAdmin):
+    list_display = ("label", "value", "suffix", "sort_order")
+    list_editable = ("sort_order",)
+    search_fields = ("label",)
 
 
 @admin.register(NotificationSetting)
@@ -372,6 +379,8 @@ class ProjectCategoryAdmin(admin.ModelAdmin):
     list_display = ("label", "key", "sort_order")
     list_editable = ("sort_order",)
     prepopulated_fields = {"key": ("label",)}
+    autocomplete_fields = ("image",)
+    search_fields = ("label", "blurb")
 
 
 class ProjectImageInline(admin.TabularInline):

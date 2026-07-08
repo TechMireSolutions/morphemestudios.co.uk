@@ -3,7 +3,7 @@ from __future__ import annotations
 from .models import BlogCategory, BlogPost, Tag
 from .models import JobApplication, JobOpening
 from .models import Lead
-from .models import Office, Page
+from .models import Office, Page, Stat
 from .models import Project, ProjectCategory, ProjectImage
 from .models import TeamMember
 from .models import Testimonial
@@ -61,6 +61,12 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = ("key", "title", "blocks", "updated_at")
+
+
+class StatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stat
+        fields = ("label", "value", "suffix", "sort_order")
 
 
 # ==========================================
@@ -288,9 +294,11 @@ class UnsubscribeSerializer(serializers.Serializer):
 
 
 class ProjectCategorySerializer(serializers.ModelSerializer):
+    image = MediaSerializer(read_only=True)
+
     class Meta:
         model = ProjectCategory
-        fields = ("key", "label", "sort_order")
+        fields = ("key", "label", "blurb", "image", "sort_order")
 
 
 class ProjectImageSerializer(serializers.ModelSerializer):

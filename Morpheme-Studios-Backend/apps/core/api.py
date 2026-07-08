@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import Office, Page, PublishStatus, SiteSetting
+from .models import Office, Page, PublishStatus, SiteSetting, Stat
 from .serializers import (
     LoginSerializer,
     PasswordChangeSerializer,
@@ -8,7 +8,7 @@ from .serializers import (
     PasswordResetRequestSerializer,
     UserSerializer,
 )
-from .serializers import OfficeSerializer, PageSerializer
+from .serializers import OfficeSerializer, PageSerializer, StatSerializer
 from apps.core import services as audit
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -50,6 +50,7 @@ class OfficeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 def settings_view(request):
     """All site settings as a flat {key: value} map."""
     data = {s.key: s.value for s in SiteSetting.objects.all()}
+    data["stats"] = StatSerializer(Stat.objects.all(), many=True).data
     return Response(data)
 
 
