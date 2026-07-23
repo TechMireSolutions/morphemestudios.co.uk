@@ -49,6 +49,13 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [heroImages.length])
 
+const DEFAULT_STATS = [
+  { label: 'Projects Completed', value: 150, suffix: '+' },
+  { label: 'Continents Covered', value: 3, suffix: '' },
+  { label: 'Years Experience', value: 15, suffix: '+' },
+  { label: 'Design Awards', value: 28, suffix: '' },
+]
+
   const blogTop = (blogList || []).slice(0, 3)
   const defaultServices = [
     { no: '01', title: 'Architecture Design', blurb: 'At Morpheme Studios is an Architecture and design services', image: HERO_IMG },
@@ -63,7 +70,8 @@ export default function Home() {
     image: cat.image ? absMedia(cat.image.file) : HERO_IMG,
   }))
   const services = servicesFromCategories.length > 0 ? servicesFromCategories : defaultServices
-  const stats = settings?.stats || []
+  const apiStats = settings?.stats
+  const stats = (Array.isArray(apiStats) && apiStats.length > 0) ? apiStats : DEFAULT_STATS
 
   // Hero intro + background parallax
   useGSAP(

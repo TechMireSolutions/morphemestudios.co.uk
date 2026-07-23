@@ -42,7 +42,7 @@ class SiteSettingAdmin(admin.ModelAdmin):
 @admin.register(Stat)
 class StatAdmin(admin.ModelAdmin):
     list_display = ("label", "value", "suffix", "sort_order")
-    list_editable = ("sort_order",)
+    list_editable = ("value", "suffix", "sort_order")
     search_fields = ("label",)
 
 
