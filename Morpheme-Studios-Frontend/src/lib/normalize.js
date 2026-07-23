@@ -7,7 +7,13 @@ const PLACEHOLDER = '/placeholder.svg'
 export function normalizeProject(p) {
   if (!p) return null
   const gallery = Array.isArray(p.gallery)
-    ? p.gallery.map((g) => absMedia(g?.media?.file)).filter(Boolean)
+    ? p.gallery
+        .map((g) => {
+          if (typeof g === 'string') return { src: absMedia(g), caption: '' }
+          const src = absMedia(g?.media?.file || g?.src || g?.file)
+          return src ? { src, caption: g?.caption || '' } : null
+        })
+        .filter(Boolean)
     : []
   const cover = absMedia(p.cover?.file) || PLACEHOLDER
   return {
@@ -22,7 +28,7 @@ export function normalizeProject(p) {
     description: p.description || '',
     services: Array.isArray(p.services) ? p.services : [],
     cover,
-    gallery: gallery.length ? gallery : [cover],
+    gallery: gallery.length ? gallery : [{ src: cover, caption: '' }],
   }
 }
 

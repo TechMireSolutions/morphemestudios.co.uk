@@ -3,7 +3,7 @@ from __future__ import annotations
 from .models import BlogCategory, BlogPost, Tag
 from .models import JobApplication, JobOpening
 from .models import Lead
-from .models import Office, Page, Stat
+from .models import Office, Page, Stat, HeroSlide
 from .models import Project, ProjectCategory, ProjectImage
 from .models import TeamMember
 from .models import Testimonial
@@ -67,6 +67,14 @@ class StatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stat
         fields = ("label", "value", "suffix", "sort_order")
+
+
+class HeroSlideSerializer(serializers.ModelSerializer):
+    image = MediaSerializer(read_only=True)
+
+    class Meta:
+        model = HeroSlide
+        fields = ("id", "title", "image", "sort_order", "is_active")
 
 
 # ==========================================

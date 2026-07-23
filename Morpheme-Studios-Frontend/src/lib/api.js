@@ -68,6 +68,7 @@ export const api = {
   openings: () => get('/careers/openings'),
   offices: () => get('/offices'),
   settings: () => get('/settings'),
+  heroSlides: () => get('/hero-slides'),
   seoMeta: (path) => get('/seo/meta', { path }),
   createLead: (body) => postJSON('/leads', body),
   subscribe: (body) => postJSON('/newsletter/subscribe', body),

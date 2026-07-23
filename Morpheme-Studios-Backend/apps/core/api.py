@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import Office, Page, PublishStatus, SiteSetting, Stat
+from .models import Office, Page, PublishStatus, SiteSetting, Stat, HeroSlide
 from .serializers import (
     LoginSerializer,
     PasswordChangeSerializer,
@@ -8,7 +8,7 @@ from .serializers import (
     PasswordResetRequestSerializer,
     UserSerializer,
 )
-from .serializers import OfficeSerializer, PageSerializer, StatSerializer
+from .serializers import OfficeSerializer, PageSerializer, StatSerializer, HeroSlideSerializer
 from apps.core import services as audit
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -44,6 +44,14 @@ class OfficeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     pagination_class = None
 
 
+class HeroSlideViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    authentication_classes: list = []
+    queryset = HeroSlide.objects.filter(is_active=True)
+    serializer_class = HeroSlideSerializer
+    pagination_class = None
+
+
 @api_view(["GET"])
 @authentication_classes([])
 @permission_classes([AllowAny])
@@ -51,6 +59,9 @@ def settings_view(request):
     """All site settings as a flat {key: value} map."""
     data = {s.key: s.value for s in SiteSetting.objects.all()}
     data["stats"] = StatSerializer(Stat.objects.all(), many=True).data
+    data["hero_slides"] = HeroSlideSerializer(
+        HeroSlide.objects.filter(is_active=True), many=True
+    ).data
     return Response(data)
 
 

@@ -4,7 +4,7 @@ from .models import AuditLog
 from .models import BlogCategory, BlogPost, Tag
 from .models import JobApplication, JobOpening
 from .models import Lead, LeadNote
-from .models import Office, Page, RedirectRule, SiteSetting, Stat
+from .models import Office, Page, HeroSlide, RedirectRule, SiteSetting, Stat
 from .models import Project, ProjectCategory, ProjectImage
 from .models import SeoMeta
 from .models import Subscriber
@@ -72,6 +72,15 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("status",)
     search_fields = ("key", "title")
     prepopulated_fields = {"key": ("title",)}
+
+
+@admin.register(HeroSlide)
+class HeroSlideAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "image", "sort_order", "is_active", "created_at")
+    list_editable = ("sort_order", "is_active")
+    list_filter = ("is_active",)
+    search_fields = ("title",)
+    autocomplete_fields = ("image",)
 
 
 # ==========================================
@@ -387,6 +396,7 @@ class ProjectImageInline(admin.TabularInline):
     model = ProjectImage
     extra = 1
     autocomplete_fields = ("media",)
+    fields = ("media", "caption", "sort_order")
     ordering = ("sort_order",)
 
 

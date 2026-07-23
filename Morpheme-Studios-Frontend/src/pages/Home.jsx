@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useGSAP } from '@gsap/react'
 import { gsap } from '../lib/gsap.js'
@@ -12,7 +12,7 @@ import { api, absMedia } from '../lib/api.js'
 import { useApi } from '../lib/useApi.js'
 import { normalizeProject, normalizePost } from '../lib/normalize.js'
 
-const HERO_IMG = '/assets/architecture.jpg'   // static brand asset (not DB content)
+const HERO_IMG = '/assets/architecture.jpg'   // static brand asset (fallback)
 
 export default function Home() {
   const heroRef = useRef(null)
@@ -23,10 +23,32 @@ export default function Home() {
     () => api.blog({ page_size: 3 }).then((r) => (r.results || []).map(normalizePost)),
     [], { fallback: [] })
   const { data: settings } = useApi(() => api.settings(), [], { fallback: {} })
+  const { data: apiSlides } = useApi(() => api.heroSlides(), [], { fallback: [] })
   const { data: categoryList } = useApi(
     () => api.projectCategories().then((r) => r.results || r || []), 
     [], { fallback: [] }
   )
+
+  const heroImages = useMemo(() => {
+    const fromApi = Array.isArray(apiSlides?.results || apiSlides) ? (apiSlides.results || apiSlides) : []
+    const fromSettings = Array.isArray(settings?.hero_slides) ? settings.hero_slides : []
+    const combined = [...fromApi, ...fromSettings]
+    const urls = combined
+      .map((s) => absMedia(s?.image?.file || s?.file || s?.url || s))
+      .filter(Boolean)
+    return urls.length > 0 ? urls : ['/assets/architecture.jpg', '/assets/hero-pynnacles.jpg']
+  }, [apiSlides, settings])
+
+  const [heroIndex, setHeroIndex] = useState(0)
+
+  useEffect(() => {
+    if (heroImages.length <= 1) return
+    const timer = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroImages.length)
+    }, 2000)
+    return () => clearInterval(timer)
+  }, [heroImages.length])
+
   const blogTop = (blogList || []).slice(0, 3)
   const defaultServices = [
     { no: '01', title: 'Architecture Design', blurb: 'At Morpheme Studios is an Architecture and design services', image: HERO_IMG },
@@ -64,7 +86,7 @@ export default function Home() {
         .from('.hero-cue', { autoAlpha: 0, duration: 1 }, '-=0.5')
 
       // Scroll animations
-      gsap.to('.hero-bg img', {
+      gsap.to('.hero-slide img', {
         yPercent: 25,
         scale: 1.2,
         ease: 'none',
@@ -80,7 +102,6 @@ export default function Home() {
       // Mouse parallax
       const onMove = (e) => {
         const { clientX: x, clientY: y } = e
-        // Reduce amplitude to avoid pushing CTA elements outside the hero
         const xPos = (x / window.innerWidth - 0.5) * 20
         const yPos = (y / window.innerHeight - 0.5) * 20
         gsap.to('.hero-content', { x: xPos, y: yPos, duration: 1.5, ease: 'power2.out' })
@@ -97,17 +118,19 @@ export default function Home() {
       {/* ---------------- HERO ---------------- */}
       <section ref={heroRef} className="hero">
         <div className="hero-bg">
-          <picture>
-            <img
-              src={HERO_IMG}
-              alt="Pynnacles Close Residences — High-end residential architecture in London"
-              // eslint-disable-next-line react/no-unknown-property
-              fetchpriority="high"
-              loading="eager"
-              decoding="async"
-              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/assets/architecture.jpg' }}
-            />
-          </picture>
+          {heroImages.map((src, idx) => (
+            <div
+              key={src + idx}
+              className={`hero-slide ${idx === heroIndex ? 'is-active' : ''}`}
+            >
+              <img
+                src={src}
+                alt={`Morpheme Studios — slide ${idx + 1}`}
+                loading={idx === 0 ? "eager" : "lazy"}
+                onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/assets/architecture.jpg' }}
+              />
+            </div>
+          ))}
           <div className="hero-scrim" />
         </div>
 

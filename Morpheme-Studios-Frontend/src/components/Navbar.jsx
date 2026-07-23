@@ -58,15 +58,18 @@ export default function Navbar() {
     }
   }, [open])
 
-  const isInternal = location.pathname !== '/'
+  const isHome = location.pathname === '/'
+  const isInternal = !isHome
   const hasBackground = scrolled || isInternal
+  const isLogo2 = !isHome || scrolled
+  const logoSrc = isLogo2 ? '/logo 2.png' : '/morpheme2.0-1.png'
 
   return (
     <>
       <header className={`nav ${hidden ? 'nav--hidden' : ''} ${hasBackground ? 'nav--scrolled' : ''}`}>
         <div className="nav-inner wrap">
           <Link to="/" className="nav-logo" data-cursor>
-            <img src="/morpheme2.0-1.png" alt="Morpheme Studios" className="nav-logo-img" />
+            <img src={logoSrc} alt="Morpheme Studios" className="nav-logo-img" />
           </Link>
 
           <nav className="nav-links">

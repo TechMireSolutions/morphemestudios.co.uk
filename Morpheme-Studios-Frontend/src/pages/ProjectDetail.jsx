@@ -1,5 +1,5 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from '../lib/gsap.js'
 
@@ -12,6 +12,12 @@ import { normalizeProject } from '../lib/normalize.js'
 
 export default function ProjectDetail() {
   const { slug } = useParams()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }, [slug])
   // Strictly API-driven (DB is the source of truth).
   const { data: project, loading } = useApi(
     () => api.project(slug).then(normalizeProject),
@@ -124,16 +130,27 @@ export default function ProjectDetail() {
 
       {/* Gallery */}
       <section className="section-tight pd-gallery">
-        <div className="wrap">
-          {project.gallery.map((src, i) => (
-            <Reveal variant="clip" key={i} className={`pd-shot ${i % 3 === 0 ? 'is-full' : ''}`}>
-              <Parallax
-                src={src}
-                alt={`${project.title} — view ${i + 1}`}
-                ratio={i % 3 === 0 ? 'ratio-16-9' : 'ratio-4-3'}
-              />
-            </Reveal>
-          ))}
+        <div className="wrap pd-gallery-wrap">
+          {project.gallery.map((item, i) => {
+            const src = typeof item === 'string' ? item : item.src
+            const caption = typeof item === 'string' ? '' : item.caption
+            return (
+              <div key={i} className={`pd-shot-wrapper ${i % 3 === 0 ? 'is-full' : ''}`}>
+                <Reveal variant="clip" className="pd-shot">
+                  <Parallax
+                    src={src}
+                    alt={caption || `${project.title} — view ${i + 1}`}
+                    ratio={i % 3 === 0 ? 'ratio-16-9' : 'ratio-4-3'}
+                  />
+                </Reveal>
+                {caption && (
+                  <Reveal variant="fade">
+                    <figcaption className="pd-shot-caption">{caption}</figcaption>
+                  </Reveal>
+                )}
+              </div>
+            )
+          })}
         </div>
       </section>
 

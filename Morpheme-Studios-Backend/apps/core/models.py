@@ -151,6 +151,24 @@ class Page(PublishableModel):
         return self.key
 
 
+class HeroSlide(models.Model):
+    """Dynamic background slides for the Home page hero section."""
+
+    title = models.CharField(max_length=200, blank=True, help_text="Optional slide title / caption")
+    image = models.ForeignKey("core.Media", on_delete=models.CASCADE, related_name="+")
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Hero slide"
+        verbose_name_plural = "Hero slides"
+
+    def __str__(self) -> str:
+        return f"Hero slide #{self.id} ({self.title or self.image.original_name})"
+
+
 # ==========================================
 # Merged from audit/models.py
 # ==========================================

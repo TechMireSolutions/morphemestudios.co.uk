@@ -150,18 +150,32 @@
   background: var(--paper-dark);
 }
 
-.hero-bg img {
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+  z-index: 0;
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.hero-slide img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Ensure the image always fills and provides a stable box (avoids visible alt collapse) */
-.hero-bg img {
   min-width: 100%;
   min-height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .hero-scrim {
@@ -368,6 +382,36 @@
   color: var(--clay);
   font-weight: 700;
   letter-spacing: 0.25em;
+}
+
+/* =================== PROJECT DETAIL GALLERY =================== */
+.pd-gallery {
+  padding-block: clamp(40px, 6vw, 80px);
+}
+
+.pd-gallery-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vw, 90px);
+}
+
+.pd-shot-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.pd-shot-caption {
+  font-family: var(--sans);
+  font-size: clamp(0.85rem, 1.05vw, 0.95rem);
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  margin-top: 4px;
+  border-left: 2px solid var(--clay);
+  padding-left: 14px;
+  font-style: italic;
 }
 
 /* =================== MARQUEE BAND =================== */
@@ -900,6 +944,8 @@ input[type="file"]::-webkit-file-upload-button {
 .filter {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 10px;
   font-family: var(--sans);
   font-size: 0.75rem;
@@ -911,6 +957,8 @@ input[type="file"]::-webkit-file-upload-button {
   border-radius: 100px;
   color: var(--ink);
   transition: all 0.5s var(--ease);
+  box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .filter:hover {

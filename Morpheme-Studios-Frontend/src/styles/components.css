@@ -81,10 +81,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: clamp(16px, 2vw, 26px);
+  padding-block: clamp(14px, 1.8vw, 22px);
 }
 .nav-logo { display: flex; align-items: center; }
-.nav-logo-img { height: clamp(24px, 3.5vw, 32px); width: auto; transition: filter 0.4s; }
+.nav-logo-img { height: clamp(30px, 4.2vw, 42px); width: auto; transition: filter 0.4s; }
 
 .nav--scrolled { 
   color: var(--ink); 
@@ -93,8 +93,7 @@
   border-bottom: 1px solid var(--line-soft); 
 }
 .nav--scrolled .nav-logo-img { 
-  /* Use shadow to make white text visible on light bg without changing logo colors */
-  filter: drop-shadow(0 0 1px rgba(0,0,0,0.8)) drop-shadow(0 0 0.5px rgba(0,0,0,0.5)); 
+  filter: none; 
 }
 .nav--hidden { transform: translateY(-100%); }
 .nav-links { display: flex; gap: clamp(24px, 3vw, 48px); }

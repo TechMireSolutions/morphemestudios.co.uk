@@ -7,11 +7,18 @@ export default function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
-    // Move focus to the main landmark so screen readers announce the new page
-    // (skip on first mount to avoid stealing focus from the intro).
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+
     const main = document.getElementById('main')
     if (main) main.focus({ preventScroll: true })
-    const t = setTimeout(() => ScrollTrigger.refresh(), 200)
+
+    const t = setTimeout(() => {
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      ScrollTrigger.refresh()
+    }, 100)
     return () => clearTimeout(t)
   }, [pathname])
   return null

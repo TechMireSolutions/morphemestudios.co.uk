@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import { gsap } from '../lib/gsap.js'
 import Reveal from '../components/Reveal.jsx'
@@ -11,6 +11,8 @@ import { normalizeProject } from '../lib/normalize.js'
 export default function Projects() {
   const [active, setActive] = useState('all')
   const headerRef = useRef(null)
+  const filterRefs = useRef([])
+  const [maxFilterWidth, setMaxFilterWidth] = useState(null)
 
   // Projects + categories are fetched strictly from the API (DB-driven).
   const { data: projects } = useApi(
@@ -19,7 +21,25 @@ export default function Projects() {
     { fallback: [] }
   )
   const { data: apiCats } = useApi(() => api.projectCategories(), [], { fallback: [] })
-  const categories = [{ key: 'all', label: 'All Projects' }, ...(apiCats || [])]
+  const categories = useMemo(() => [{ key: 'all', label: 'All Projects' }, ...(apiCats || [])], [apiCats])
+
+  useEffect(() => {
+    if (categories.length > 0 && filterRefs.current.length > 0) {
+      let maxW = 0
+      filterRefs.current.forEach((el) => {
+        if (el) {
+          const prevMinW = el.style.minWidth
+          el.style.minWidth = 'auto'
+          const w = el.offsetWidth
+          el.style.minWidth = prevMinW
+          if (w > maxW) maxW = w
+        }
+      })
+      if (maxW > 0) {
+        setMaxFilterWidth(maxW)
+      }
+    }
+  }, [categories, projects])
 
   const list = useMemo(
     () => (active === 'all' ? projects : projects.filter((p) => p.category === active)),
@@ -64,9 +84,11 @@ export default function Projects() {
 
       {/* Filters */}
       <div className="wrap filters">
-        {categories.map((c) => (
+        {categories.map((c, i) => (
           <button
             key={c.key}
+            ref={(el) => (filterRefs.current[i] = el)}
+            style={maxFilterWidth ? { minWidth: `${maxFilterWidth}px` } : {}}
             className={`filter ${active === c.key ? 'is-active' : ''}`}
             onClick={() => setActive(c.key)}
             data-cursor

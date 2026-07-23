@@ -15,7 +15,7 @@ from apps.core.admin_api import AdminApplicationViewSet
 from apps.core.views import JobApplicationCreateView, JobOpeningViewSet
 from apps.core import api as core_api
 from apps.core.admin_api import dashboard_stats
-from apps.core.api import OfficeViewSet
+from apps.core.api import OfficeViewSet, HeroSlideViewSet
 from apps.core.admin_api import AdminLeadViewSet
 from apps.core.views import LeadCreateView
 from apps.core import views as newsletter_views
@@ -41,6 +41,7 @@ public.register("team", TeamMemberViewSet, basename="team")
 public.register("testimonials", TestimonialViewSet, basename="testimonials")
 public.register("careers/openings", JobOpeningViewSet, basename="openings")
 public.register("offices", OfficeViewSet, basename="offices")
+public.register("hero-slides", HeroSlideViewSet, basename="hero-slides")
 
 # --- Public write (forms) ---
 forms = DefaultRouter(trailing_slash=False)
